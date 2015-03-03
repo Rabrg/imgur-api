@@ -1,5 +1,9 @@
 package me.rabrg.imgur.response.model;
 
+/**
+ * A class representing the image data model.
+ * @author Ryan Greene
+ */
 public class Image extends Model {
 
     public String id;

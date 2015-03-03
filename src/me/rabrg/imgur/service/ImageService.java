@@ -8,6 +8,10 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
+/**
+ * An interface containing all image related services used by the Retrofit REST client.
+ * @author Ryan Greene
+ */
 public interface ImageService {
 
     @GET("/image/{id}")
@@ -20,7 +24,7 @@ public interface ImageService {
     Response<Basic> deleteImage(@Path("id") String id);
 
     @POST("/image/{id}")
-    Response<Basic> updateImage(@Path("title") String title, @Path("description") String description);
+    Response<Basic> updateImage(@Path("id") String id, @Path("title") String title, @Path("description") String description);
 
     @DELETE("/image/{id}/favorite")
     Response<Basic> favoriteImage(@Path("id") String id);
