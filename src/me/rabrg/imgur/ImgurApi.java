@@ -1,9 +1,11 @@
 package me.rabrg.imgur;
 
 import me.rabrg.imgur.response.Response;
+import me.rabrg.imgur.response.model.Account;
 import me.rabrg.imgur.response.model.Album;
 import me.rabrg.imgur.response.model.Basic;
 import me.rabrg.imgur.response.model.Image;
+import me.rabrg.imgur.service.AccountService;
 import me.rabrg.imgur.service.AlbumService;
 import me.rabrg.imgur.service.ImageService;
 import retrofit.RequestInterceptor;
@@ -18,6 +20,8 @@ public class ImgurApi {
     private final RestAdapter restAdapter;
     private final ImageService imageService;
     private final AlbumService albumService;
+    private final AccountService accountService;
+
     /**
      * Constructs a new ImgurApi with the specified clientId.
      * @param clientId The client id.
@@ -31,6 +35,7 @@ public class ImgurApi {
         }).build();
         imageService = restAdapter.create(ImageService.class);
         albumService = restAdapter.create(AlbumService.class);
+        accountService = restAdapter.create(AccountService.class);
     }
 
     /**
@@ -102,5 +107,14 @@ public class ImgurApi {
      */
     public Response<Image> getAlbumImage(final String albumId, final String imageId) {
         return albumService.getAlbumImage(albumId, imageId);
+    }
+
+    /**
+     * Get standard user information.
+     * @param username The username of the account.
+     * @return A response containing information about the account.
+     */
+    public Response<Account> getAccount(final String username) {
+        return accountService.getAccount(username);
     }
 }
