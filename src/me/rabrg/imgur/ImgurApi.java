@@ -6,8 +6,6 @@ import me.rabrg.imgur.service.ImageService;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
-import java.lang.reflect.Field;
-
 public class ImgurApi {
 
     private final RestAdapter restAdapter;
@@ -21,19 +19,6 @@ public class ImgurApi {
             }
         }).build();
         this.imageService = restAdapter.create(ImageService.class);
-    }
-
-    public static void main(final String[] args) {
-        final Image image = new ImgurApi("7d86c8075bebaf3").getImage("O6vE8Mx").data;
-        Field[] fields = image.getClass().getFields();
-        for(Field f : fields){
-            try {
-                Object v = f.get(image);
-                System.out.println(f.getName() + " " + v);
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public Response<Image> getImage(final String id) {
