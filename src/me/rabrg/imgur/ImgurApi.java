@@ -88,9 +88,19 @@ public class ImgurApi {
     /**
      * Get information about a specific album.
      * @param id The id of the album.
-     * @returnA response containing information about the album.
+     * @return A response containing information about the album.
      */
     public Response<Album> getAlbum(final String id) {
         return albumService.getAlbum(id);
+    }
+
+    /**
+     * Get information about an image in an album.
+     * @param albumId The id of the album.
+     * @param imageId The id of the image.
+     * @return  A response containing information about the image.
+     */
+    public Response<Image> getAlbumImage(final String albumId, final String imageId) {
+        return albumService.getAlbumImage(albumId, imageId);
     }
 }
