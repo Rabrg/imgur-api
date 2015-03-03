@@ -1,8 +1,10 @@
 package me.rabrg.imgur;
 
 import me.rabrg.imgur.response.Response;
+import me.rabrg.imgur.response.model.Album;
 import me.rabrg.imgur.response.model.Basic;
 import me.rabrg.imgur.response.model.Image;
+import me.rabrg.imgur.service.AlbumService;
 import me.rabrg.imgur.service.ImageService;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -15,19 +17,20 @@ public class ImgurApi {
 
     private final RestAdapter restAdapter;
     private final ImageService imageService;
-
+    private final AlbumService albumService;
     /**
      * Constructs a new ImgurApi with the specified clientId.
      * @param clientId The client id.
      */
     public ImgurApi(final String clientId) {
-        this.restAdapter = new RestAdapter.Builder().setEndpoint("https://api.imgur.com/3").setRequestInterceptor(new RequestInterceptor() {
+        restAdapter = new RestAdapter.Builder().setEndpoint("https://api.imgur.com/3").setRequestInterceptor(new RequestInterceptor() {
             @Override
             public void intercept(final RequestFacade request) {
                 request.addHeader("Authorization", "Client-ID " + clientId);
             }
         }).build();
-        this.imageService = restAdapter.create(ImageService.class);
+        imageService = restAdapter.create(ImageService.class);
+        albumService = restAdapter.create(AlbumService.class);
     }
 
     /**
@@ -80,5 +83,14 @@ public class ImgurApi {
      */
     public Response<Basic> favoriteImage(final String id) {
         return imageService.favoriteImage(id);
+    }
+
+    /**
+     * Get information about a specific album.
+     * @param id The id of the album.
+     * @returnA response containing information about the album.
+     */
+    public Response<Album> getAlbum(final String id) {
+        return albumService.getAlbum(id);
     }
 }
