@@ -6,15 +6,15 @@ public final class Model<T> {
     private boolean success;
     private int status;
 
-    public T getData() {
+    T getData() {
         return data;
     }
 
-    public boolean isSuccess() {
+    boolean isSuccess() {
         return success;
     }
 
-    public int getStatus() {
+    int getStatus() {
         return status;
     }
 }
