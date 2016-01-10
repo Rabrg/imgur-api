@@ -1,5 +1,7 @@
 package me.rabrg.imgur;
 
+import me.rabrg.imgur.account.Account;
+import me.rabrg.imgur.account.AccountService;
 import me.rabrg.imgur.image.Image;
 import me.rabrg.imgur.image.ImageService;
 import okhttp3.Headers;
@@ -41,6 +43,11 @@ public final class ImgurAPI {
     private final Retrofit retrofit;
 
     /**
+     * The AccountService instance.
+     */
+    private final AccountService accountService;
+
+    /**
      * The ImageService instance.
      */
     private final ImageService imageService;
@@ -66,7 +73,19 @@ public final class ImgurAPI {
         retrofit = new Retrofit.Builder().baseUrl("https://api.imgur.com/3/")
                 .addConverterFactory(GsonConverterFactory.create()).client(client).build();
 
+        accountService = retrofit.create(AccountService.class);
         imageService = retrofit.create(ImageService.class);
+    }
+
+    /**
+     * Request standard account information of the specified user.
+     *
+     * @param username The username of the account.
+     * @return Information about the account.
+     * @throws IOException If the get fails.
+     */
+    public Account getAccount(final String username) throws IOException {
+        return call(accountService.account(username));
     }
 
     /**
