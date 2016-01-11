@@ -2,6 +2,8 @@ package me.rabrg.imgur;
 
 import me.rabrg.imgur.account.Account;
 import me.rabrg.imgur.account.AccountService;
+import me.rabrg.imgur.album.Album;
+import me.rabrg.imgur.album.AlbumService;
 import me.rabrg.imgur.image.Image;
 import me.rabrg.imgur.image.ImageService;
 import okhttp3.Headers;
@@ -48,6 +50,11 @@ public final class ImgurAPI {
     private final AccountService accountService;
 
     /**
+     * The AlbumService instance.
+     */
+    private final AlbumService albumService;
+
+    /**
      * The ImageService instance.
      */
     private final ImageService imageService;
@@ -74,6 +81,7 @@ public final class ImgurAPI {
                 .addConverterFactory(GsonConverterFactory.create()).client(client).build();
 
         accountService = retrofit.create(AccountService.class);
+        albumService = retrofit.create(AlbumService.class);
         imageService = retrofit.create(ImageService.class);
     }
 
@@ -86,6 +94,17 @@ public final class ImgurAPI {
      */
     public Account getAccount(final String username) throws IOException {
         return call(accountService.account(username));
+    }
+
+    /**
+     * Get information about the specified album.
+     *
+     * @param id The id of the album.
+     * @return Information about the album.
+     * @throws IOException If the get fails.
+     */
+    public Album getAlbum(final String id) throws IOException {
+        return call(albumService.album(id));
     }
 
     /**
