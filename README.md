@@ -1,2 +1,2 @@
 # imgur-api
-A Java wrapper of the Imgur API.
+An Android compatible Java wrapper of the Imgur API.
