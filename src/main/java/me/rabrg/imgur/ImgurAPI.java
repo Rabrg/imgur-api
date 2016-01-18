@@ -1,11 +1,16 @@
 package me.rabrg.imgur;
 
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.model.Token;
+import com.github.scribejava.core.model.Verifier;
+import com.github.scribejava.core.oauth.OAuthService;
 import me.rabrg.imgur.account.Account;
 import me.rabrg.imgur.account.AccountService;
 import me.rabrg.imgur.album.Album;
 import me.rabrg.imgur.album.AlbumService;
 import me.rabrg.imgur.image.Image;
 import me.rabrg.imgur.image.ImageService;
+import me.rabrg.imgur.oauth.ImgurOAuthAPI;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -60,6 +65,16 @@ public final class ImgurAPI {
     private final ImageService imageService;
 
     /**
+     * The OAuthService instance.
+     */
+    private final OAuthService oAuthService;
+
+    /**
+     * The access token.
+     */
+    private Token accessToken;
+
+    /**
      * Constructs a new ImgurAPI instance with the specified client id and client secret.
      *
      * @param clientId     The client id.
@@ -72,9 +87,12 @@ public final class ImgurAPI {
         final OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             public okhttp3.Response intercept(final Interceptor.Chain chain) throws IOException {
                 final Request request = chain.request();
-                final Headers headers = request.headers().newBuilder()
-                        .add("Authorization", "Client-ID " + clientId).build();
-                return chain.proceed(request.newBuilder().headers(headers).build());
+                final Headers.Builder headersBuilder = request.headers().newBuilder();
+                if (accessToken == null)
+                    headersBuilder.add("Authorization", "Client-ID " + clientId);
+                else
+                    headersBuilder.add("Authorization", "Bearer " + accessToken.getToken());
+                return chain.proceed(request.newBuilder().headers(headersBuilder.build()).build());
             }
         }).build();
         retrofit = new Retrofit.Builder().baseUrl("https://api.imgur.com/3/")
@@ -83,6 +101,27 @@ public final class ImgurAPI {
         accountService = retrofit.create(AccountService.class);
         albumService = retrofit.create(AlbumService.class);
         imageService = retrofit.create(ImageService.class);
+
+        oAuthService = new ServiceBuilder().provider(ImgurOAuthAPI.class).apiKey(clientId)
+                .apiSecret(clientSecret).build();
+    }
+
+    /**
+     * Gets the authorization URL to redirect the user to.
+     *
+     * @return The authorization URL.
+     */
+    public String getAuthorizationURL() {
+        return oAuthService.getAuthorizationUrl(Token.empty());
+    }
+
+    /**
+     * Authorizes the API with the pin code obtained by the user.
+     *
+     * @param pin The pin code.
+     */
+    public void authorize(final String pin) {
+        accessToken = oAuthService.getAccessToken(Token.empty(), new Verifier(pin));
     }
 
     /**
