@@ -5,9 +5,9 @@ import java.io.IOException;
 public final class AccountTest {
 
     public static void main(final String[] args) throws IOException {
-        final ImgurAPI api = new ImgurAPI("", "");
+        final ImgurAPI api = new ImgurAPI("client id", "client secret");
 
-        // Gets information about an account
+        // Get information about an account
         System.out.println(api.getAccount("rabrg"));
     }
 }
